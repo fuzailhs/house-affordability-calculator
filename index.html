@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Estimate the affordable home price in Canada from household income, debts, down payment, mortgage assumptions and estimated ownership costs." />
+    <title>Haven — Canadian Home Affordability Calculator</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#calculator">Skip to calculator</a>
+
+    <header class="site-header">
+      <div class="container site-header-inner">
+        <a class="brand" href="#top">Haven</a>
+        <nav class="site-nav" aria-label="Primary">
+          <a href="#calculator">Calculator</a>
+          <a href="#how">How it works</a>
+          <a href="#assumptions">Assumptions</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="container hero-inner">
+          <p class="eyebrow">Planning estimate</p>
+          <h1>How much house can you afford in Canada?</h1>
+          <p class="lede">
+            Enter household income, existing debts, a down payment, and estimated ownership
+            costs to see an estimated affordable home price along with the monthly costs behind it.
+          </p>
+          <p class="hero-note">Educational estimate — not a lender approval.</p>
+        </div>
+      </section>
+
+      <section class="calculator" id="calculator" aria-labelledby="calculator-heading">
+        <div class="container">
+          <h2 class="section-title" id="calculator-heading">Affordability calculator</h2>
+          <div class="calculator-grid">
+            <div class="panel input-panel">
+              <h3 class="panel-title">Your finances</h3>
+
+              <div class="field">
+                <label for="income-annual">Annual gross household income</label>
+                <div class="input-wrap">
+                  <span class="prefix" aria-hidden="true">$</span>
+                  <input id="income-annual" type="number" inputmode="numeric" min="0" step="5000" value="120000" />
+                </div>
+                <p class="field-help" id="help-income-annual">Combined annual gross income before tax, in CAD.</p>
+                <p class="field-error" id="err-grossAnnualIncome" hidden></p>
+              </div>
+
+              <div class="field">
+                <label for="debt-monthly">Monthly recurring debt payments</label>
+                <div class="input-wrap">
+                  <span class="prefix" aria-hidden="true">$</span>
+                  <input id="debt-monthly" type="number" inputmode="numeric" min="0" step="50" value="450" />
+                </div>
+                <p class="field-help" id="help-debt-monthly">Car loans, credit cards, lines of credit, and other obligations.</p>
+                <p class="field-error" id="err-monthlyDebtPayments" hidden></p>
+              </div>
+
+              <div class="field">
+                <label for="living-monthly">Other monthly living expenses</label>
+                <div class="input-wrap">
+                  <span class="prefix" aria-hidden="true">$</span>
+                  <input id="living-monthly" type="number" inputmode="numeric" min="0" step="50" value="0" />
+                </div>
+                <p class="field-help" id="help-living-monthly">Utilities and other discretionary living costs. Used for personal cash flow, not the GDS housing cost.</p>
+                <p class="field-error" id="err-monthlyNonHousingExpenses" hidden></p>
+              </div>
+
+              <div class="field">
+                <label for="maintenance-monthly">Maintenance allowance</label>
+                <div class="input-wrap">
+                  <span class="prefix" aria-hidden="true">$</span>
+                  <input id="maintenance-monthly" type="number" inputmode="numeric" min="0" step="50" value="250" />
+                </div>
+                <p class="field-help" id="help-maintenance-monthly">Estimated monthly maintenance or condo fees. Optional assumption.</p>
+                <p class="field-error" id="err-monthlyMaintenance" hidden></p>
+              </div>
+
+              <div class="field">
+                <label for="tax-annual">Estimated annual property tax</label>
+                <div class="input-wrap">
+                  <span class="prefix" aria-hidden="true">$</span>
+                  <input id="tax-annual" type="number" inputmode="numeric" min="0" step="500" value="3000" />
+                </div>
+                <p class="field-help" id="help-tax-annual">Annual amount in CAD; the monthly cost is the annual amount divided by 12. Province selection updates this starting estimate.</p>
+                <p class="field-error" id="err-annualPropertyTax" hidden></p>
+              </div>
+
+              <div class="field">
+                <label for="insurance-monthly">Monthly home insurance</label>
+                <div class="input-wrap">
+                  <span class="prefix" aria-hidden="true">$</span>
+                  <input id="insurance-monthly" type="number" inputmode="numeric" min="0" step="10" value="150" />
+                </div>
+                <p class="field-help" id="help-insurance-monthly">Estimated monthly home insurance premium.</p>
+                <p class="field-error" id="err-monthlyHomeInsurance" hidden></p>
+              </div>
+
+              <div class="field">
+                <label for="heating-monthly">Monthly heating cost</label>
+                <div class="input-wrap">
+                  <span class="prefix" aria-hidden="true">$</span>
+                  <input id="heating-monthly" type="number" inputmode="numeric" min="0" step="10" value="100" />
+                </div>
+                <p class="field-help" id="help-heating-monthly">Optional estimated monthly heating cost for the property.</p>
+                <p class="field-error" id="err-monthlyHeating" hidden></p>
+              </div>
+
+              <div class="field">
+                <label for="rate-annual">Mortgage interest rate (annual %)</label>
+                <input id="rate-annual" type="number" inputmode="decimal" min="0" max="50" step="0.05" value="4.5" />
+                <p class="field-help" id="help-rate-annual">Quoted nominal annual rate compounded semi-annually (Canadian convention).</p>
+                <p class="field-error" id="err-annualInterestRate" hidden></p>
+              </div>
+
+              <div class="field">
+                <label for="amortization">Amortization period</label>
+                <select id="amortization">
+                  <option value="15">15 years</option>
+                  <option value="20">20 years</option>
+                  <option value="25" selected>25 years</option>
+                  <option value="30">30 years</option>
+                </select>
+                <p class="field-help" id="help-amortization">Number of years over which the mortgage is repaid.</p>
+                <p class="field-error" id="err-amortizationYears" hidden></p>
+              </div>
+
+              <div class="field">
+                <label for="down-payment">Available down payment</label>
+                <div class="input-wrap">
+                  <span class="prefix" aria-hidden="true">$</span>
+                  <input id="down-payment" type="number" inputmode="numeric" min="0" step="5000" value="90000" />
+                </div>
+                <p class="field-help" id="help-down-payment">Amount you have available for a purchase. Used as the estimated mortgage base.</p>
+                <p class="field-error" id="err-downPayment" hidden></p>
+              </div>
+
+              <div class="field">
+                <label for="budget-monthly">Desired monthly housing budget <span class="optional">(optional)</span></label>
+                <div class="input-wrap">
+                  <span class="prefix" aria-hidden="true">$</span>
+                  <input id="budget-monthly" type="number" inputmode="numeric" min="0" step="50" value="" placeholder="Not set" />
+                </div>
+                <p class="field-help" id="help-budget-monthly">Optional planning budget. Caps the estimated maximum purchase price.</p>
+                <p class="field-error" id="err-targetMonthlyHousingBudget" hidden></p>
+              </div>
+
+              <div class="field">
+                <label for="province-select">Province or territory</label>
+                <select id="province-select">
+                  <option value="AB">Alberta</option>
+                  <option value="BC">British Columbia</option>
+                  <option value="MB">Manitoba</option>
+                  <option value="NB">New Brunswick</option>
+                  <option value="NL">Newfoundland and Labrador</option>
+                  <option value="NS">Nova Scotia</option>
+                  <option value="NT">Northwest Territories</option>
+                  <option value="NU">Nunavut</option>
+                  <option value="ON" selected>ON — Ontario</option>
+                  <option value="PE">Prince Edward Island</option>
+                  <option value="QC">Quebec</option>
+                  <option value="SK">Saskatchewan</option>
+                  <option value="YT">Yukon</option>
+                </select>
+                <p class="field-help" id="help-province-select">Updates the suggested starting annual property tax estimate. Actual rates vary by municipality and assessment.</p>
+              </div>
+
+              <button type="button" class="btn btn-secondary btn-block" id="reset-button">Reset to defaults</button>
+            </div>
+
+            <div class="panel results-panel">
+              <h3 class="panel-title">Estimated affordability</h3>
+
+              <div class="result-status" id="result-status" role="status" aria-live="polite">
+                <p class="result-status-title" id="result-status-title">Checking inputs…</p>
+                <p class="result-status-body" id="result-status-body"></p>
+              </div>
+
+              <div class="result-hero" id="result-hero">
+                <p class="result-hero-label">Estimated affordable home price</p>
+                <p class="result-hero-value" id="resPrice">—</p>
+                <p class="result-hero-note" id="resPriceNote"></p>
+                <p class="result-hero-binding" id="resBinding">Not available</p>
+              </div>
+
+              <div class="metrics-grid" id="resMetrics" hidden>
+                <div class="metric-card">
+                  <p class="metric-label">Monthly mortgage payment (P&amp;I)</p>
+                  <p class="metric-value" id="resMonthlyPayment">—</p>
+                  <p class="metric-help">Principal and interest.</p>
+                </div>
+                <div class="metric-card">
+                  <p class="metric-label">Mortgage amount</p>
+                  <p class="metric-value" id="resMortgageAmount">—</p>
+                  <p class="metric-help">Includes assumed-financed default insurance.</p>
+                </div>
+                <div class="metric-card">
+                  <p class="metric-label">Down payment</p>
+                  <p class="metric-value" id="resDownPaymentAmount">—</p>
+                  <p class="metric-value metric-sub" id="resDownPaymentPct">—</p>
+                  <p class="metric-help">Percentage of purchase price.</p>
+                </div>
+                <div class="metric-card">
+                  <p class="metric-label">Total monthly housing cost</p>
+                  <p class="metric-value" id="resHousingCost">—</p>
+                  <p class="metric-help">Mortgage, taxes, insurance, heating, maintenance.</p>
+                </div>
+                <div class="metric-card">
+                  <p class="metric-label">Property tax</p>
+                  <p class="metric-value" id="resPropertyTax">—</p>
+                  <p class="metric-help">Per month, annual amount divided by 12.</p>
+                </div>
+                <div class="metric-card">
+                  <p class="metric-label">Home insurance</p>
+                  <p class="metric-value" id="resHomeInsurance">—</p>
+                  <p class="metric-help">Per month.</p>
+                </div>
+                <div class="metric-card">
+                  <p class="metric-label">Heating cost</p>
+                  <p class="metric-value" id="resHeating">—</p>
+                  <p class="metric-help">Per month.</p>
+                </div>
+                <div class="metric-card">
+                  <p class="metric-label">Maintenance</p>
+                  <p class="metric-value" id="resMaintenance">—</p>
+                  <p class="metric-help">Per month.</p>
+                </div>
+                <div class="metric-card">
+                  <p class="metric-label">Estimated monthly cash remaining</p>
+                  <p class="metric-value" id="resCashRemaining">—</p>
+                  <p class="metric-help">Gross income basis, before income tax and unlisted expenses.</p>
+                </div>
+                <div class="metric-card">
+                  <p class="metric-label">Gross debt service (GDS)</p>
+                  <p class="metric-value" id="resGds">—</p>
+                  <p class="metric-help">Housing cost divided by gross monthly income.</p>
+                </div>
+                <div class="metric-card">
+                  <p class="metric-label">Total debt service (TDS)</p>
+                  <p class="metric-value" id="resTds">—</p>
+                  <p class="metric-help">Housing cost plus debts divided by gross monthly income.</p>
+                </div>
+                <div class="metric-card">
+                  <p class="metric-label">Stress-test qualifying payment</p>
+                  <p class="metric-value" id="resQualifyingPayment">—</p>
+                  <p class="metric-help">Payment at qualifying rate (contract + 2% or 5.25% floor).</p>
+                </div>
+              </div>
+
+              <div class="card">
+                <h4>Warnings and notes</h4>
+                <div id="result-warnings">
+                  <ul></ul>
+                </div>
+              </div>
+
+              <div class="card">
+                <h4>Monthly cost breakdown</h4>
+                <div id="cost-breakdown"></div>
+              </div>
+
+              <div class="card" id="scenarios" hidden>
+                <h4>Scenario comparison</h4>
+                <p id="scenario-summary" class="scenario-summary"></p>
+                <div class="chart-wrap">
+                  <canvas id="scenarioChart" role="img" aria-label="Line chart of total monthly housing cost across scenarios"></canvas>
+                </div>
+                <div class="table-wrap">
+                  <table class="scenario-table">
+                    <thead>
+                      <tr>
+                        <th scope="col">Scenario</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Down payment</th>
+                        <th scope="col">Mortgage</th>
+                        <th scope="col">Payment</th>
+                        <th scope="col">Housing cost</th>
+                        <th scope="col">GDS</th>
+                        <th scope="col">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody id="scenario-tbody"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="info-section" id="how">
+        <div class="container">
+          <h2 class="section-title">How it works</h2>
+          <ol class="how-list">
+            <li><strong>Enter income and debts.</strong> Gross household income and recurring monthly debt payments drive the estimate.</li>
+            <li><strong>Add the down payment.</strong> The mortgage base is the purchase price minus your available down payment.</li>
+            <li><strong>Set mortgage assumptions.</strong> Interest rate and amortization are converted and applied consistently.</li>
+            <li><strong>Add ownership costs.</strong> Property tax, insurance, heating, and maintenance are added to the mortgage payment.</li>
+            <li><strong>Review the estimate.</strong> The app searches for the highest price that satisfies the affordability constraints.</li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="info-section" id="assumptions">
+        <div class="container">
+          <h2 class="section-title">Assumptions and sources</h2>
+          <div class="card assumptions-card">
+            <h4>Model assumptions</h4>
+            <ul class="assumption-list">
+              <li>Canadian mortgage rates are treated as nominal annual rates compounded semi-annually; an equivalent monthly rate is derived for calculations.</li>
+              <li>Mortgage default insurance is assumed to be financed into the mortgage balance when required.</li>
+              <li>Affordability thresholds use a GDS limit of 39% and TDS limit of 44% of gross monthly household income.</li>
+              <li>The mortgage stress test qualifying rate is the greater of the contract rate plus 2% or 5.25%.</li>
+              <li>Estimated affordable price is the highest price satisfying the enabled constraints within a configured search cap.</li>
+            </ul>
+            <h4>Verified sources</h4>
+            <ul class="source-list">
+              <li>Canada Mortgage and Housing Corporation (CMHC) — <a href="https://www.cmhc-schl.gc.ca/" target="_blank" rel="noopener">cmhc-schl.gc.ca</a></li>
+              <li>Office of the Superintendent of Financial Institutions (OSFI) — <a href="https://www.osfi-bsif.gc.ca/" target="_blank" rel="noopener">osfi-bsif.gc.ca</a></li>
+              <li>Bank of Canada — <a href="https://www.bankofcanada.ca/" target="_blank" rel="noopener">bankofcanada.ca</a></li>
+              <li>Financial Consumer Agency of Canada (FCAC) — <a href="https://www.fcac-acfc.gc.ca/" target="_blank" rel="noopener">fcac-acfc.gc.ca</a></li>
+            </ul>
+            <p class="source-meta">Rules verified on 2026-10-24. This calculator is not endorsed by these sources.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <p class="disclaimer">
+          This calculator provides estimates for planning and educational purposes only. It is not financial, legal, tax, or mortgage advice and does not guarantee mortgage approval. Actual affordability depends on lender policies, qualification and stress-test requirements, credit history, income verification, property details, taxes, insurance, closing costs, and other factors. Verify current rules and obtain advice or a quote from a qualified professional.
+        </p>
+      </div>
+    </footer>
+
+    <script src="js/calculations.js"></script>
+    <script src="js/format.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>
