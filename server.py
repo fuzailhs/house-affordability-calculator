@@ -19,8 +19,12 @@ class CalculatorHandler(SimpleHTTPRequestHandler):
 
 
 def main():
-    server = ThreadingHTTPServer(("127.0.0.1", 8000), CalculatorHandler)
-    print("Serving Canadian House Affordability Calculator at http://127.0.0.1:8000")
+    port = os.environ.get("PORT")
+    # On a host that assigns PORT (e.g. Railway), listen on all interfaces.
+    host = "0.0.0.0" if port else "127.0.0.1"
+    port = int(port or 8000)
+    server = ThreadingHTTPServer((host, port), CalculatorHandler)
+    print(f"Serving Canadian House Affordability Calculator at http://{host}:{port}")
     server.serve_forever()
 
 
